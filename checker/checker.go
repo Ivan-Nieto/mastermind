@@ -1,5 +1,6 @@
 package checker
 
+import "strconv"
 import "mastermind/shared"
 
 func CheckGuess(guess int, answer int) shared.Score {
@@ -12,9 +13,32 @@ func CheckGuess(guess int, answer int) shared.Score {
 		}
 	}
 
+	answerStr := strconv.Itoa(answer)
+	answerRunes := []rune(answerStr)
+	guessStr := strconv.Itoa(guess)
+	guessRunes := []rune(guessStr)
+	numInPosition := CountInPosition(guessRunes, answerRunes)
+	numOutOfPosition := CountOutOfPosition(guessRunes, answerRunes)
+
 	return shared.Score{
-		CorrectAndOutOfPosition: 0,
-		CorrectAndInPossition:   0,
-		CorrectGuess:            false,
+		CorrectAndOutOfPosition: numOutOfPosition,
+		CorrectAndInPossition:   numInPosition,
+		CorrectGuess:            numInPosition == len(answerStr) && len(guessStr) == len(answerStr),
 	}
+}
+
+func CountInPosition(guess []rune, answer []rune) int {
+	numInPosition := 0
+	for i := 0; i < len(answer); i += 1 {
+		if guess[i] == answer[i] {
+			numInPosition += 1
+		}
+	}
+
+	return numInPosition
+}
+
+func CountOutOfPosition(guess []rune, answer []rune) int {
+
+	return 0
 }
