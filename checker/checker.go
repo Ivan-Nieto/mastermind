@@ -4,18 +4,17 @@ import "mastermind/shared"
 
 func CheckGuess(guess int, answer int) shared.Score {
 
-	if (guess == answer) {
+	if guess == answer {
 		return shared.Score{
 			CorrectAndOutOfPosition: 0,
-			CorrectAndInPossition: 4,
-			CorrectGuess: true, 
+			CorrectAndInPossition:   4,
+			CorrectGuess:            true,
 		}
 	}
 
 	return shared.Score{
 		CorrectAndOutOfPosition: 0,
-		CorrectAndInPossition: 0,
-		CorrectGuess: false, 
+		CorrectAndInPossition:   0,
+		CorrectGuess:            false,
 	}
 }
-

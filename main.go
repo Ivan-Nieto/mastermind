@@ -11,10 +11,10 @@ func main() {
 	tempCode := 1010
 	guess := guesser.MakeGuess(shared.Score{})
 	currScore := checker.CheckGuess(guess, tempCode)
-	
+
 	i := 1
 	for i := 1; i < maxGuesses; i += 1 {
-    if (currScore.CorrectGuess) {
+		if currScore.CorrectGuess {
 			break
 		}
 
@@ -22,10 +22,9 @@ func main() {
 		currScore = checker.CheckGuess(guess, tempCode)
 	}
 
-	if (currScore.CorrectGuess) {
+	if currScore.CorrectGuess {
 		fmt.Printf("The correct number '%d' was guessed in %d guesses\n", tempCode, i)
 	} else {
-		fmt.Printf("The number'%d' was not found :(\n", tempCode)
+		fmt.Printf("The number '%d' was not found :(\n", tempCode)
 	}
 }
-
