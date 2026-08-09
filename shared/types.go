@@ -5,3 +5,6 @@ type Score struct {
 	CorrectAndInPossition   int
 	CorrectGuess            bool
 }
+
+var EmptyScore = Score{0,0,false}
+
