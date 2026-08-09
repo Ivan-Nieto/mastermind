@@ -6,11 +6,10 @@ import "mastermind/checker"
 import "fmt"
 
 func main() {
-
-	maxGuesses := 20
-	tempCode := 1010
+	maxGuesses := 5
+	answer := "1010"
 	guess := guesser.MakeGuess(shared.Score{})
-	currScore := checker.CheckGuess(guess, tempCode)
+	currScore := checker.CheckGuess(guess, answer)
 
 	i := 1
 	for i := 1; i < maxGuesses; i += 1 {
@@ -19,12 +18,12 @@ func main() {
 		}
 
 		guess = guesser.MakeGuess(currScore)
-		currScore = checker.CheckGuess(guess, tempCode)
+		currScore = checker.CheckGuess(guess, answer)
 	}
 
 	if currScore.CorrectGuess {
-		fmt.Printf("The correct number '%d' was guessed in %d guesses\n", tempCode, i)
+		fmt.Printf("The correct number '%s' was guessed in %d guesses\n", answer, i)
 	} else {
-		fmt.Printf("The number '%d' was not found :(\n", tempCode)
+		fmt.Printf("The number '%s' was not found :(\n", answer)
 	}
 }
