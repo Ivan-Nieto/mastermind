@@ -12,7 +12,12 @@ type PrevGuess struct {
 	score shared.Score
 }
 
+type SuspectedAnswerDigit struct {
+	guess string
+	position []int
+}
 
+var suspectedAnswers = []SuspectedAnswerDigit{}
 var prevGuesses = []PrevGuess{}
 
 func saveScore(score shared.Score) {
@@ -40,7 +45,7 @@ func checkLastGuessResponse(score shared.Score) {
 		log.Fatal("New guess was requested but the last guess was correct")
 	}
 
-	if score.CorrectAndOutOfPosition == 0 && score.CorrectAndInPossition == 0 {
+	if len(prevGuesses) < 2 || score.CorrectAndOutOfPosition == 0 && score.CorrectAndInPossition == 0 {
 		// Nothing to do; the previous answer didn't get any right
 		return
 	}
@@ -57,27 +62,31 @@ func checkLastGuessResponse(score shared.Score) {
 
 	lastScore := prevGuesses[numPrevGuesses - 2].score
 	lastScoreOutOfPos := lastScore.CorrectAndOutOfPosition
-	lastScoreInPos := lastScore.CorrectAndInPosition
+	// lastScoreInPos := lastScore.CorrectAndInPosition
 	currScoreOutOfPos := score.CorrectAndOutOfPosition
-	currScoreInPos := score.CorrectAndInPosition
+	// currScoreInPos := score.CorrectAndInPosition
 
 	if currScoreOutOfPos > 0 {
 		// Might not be necessary to check len > 2 given single
 		// digit guesses are never the first guess.
 		if lastGuessWasSingleDigit && numPrevGuesses > 2 {
-			if lastScoreOutOfPos == 1) {
+			if lastScoreOutOfPos == 1 {
 				// Means one of these digits is on the left hand side.
 				// If currScoreOutOfPos is = 2; that means the answer is bbxx
 				if currScoreOutOfPos == 2 {
-					confirmedPosition[0] = previousGuessStr[0]
-					confirmedPosition[1] = previousGuessStr[0]
+					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0}})  
+					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{1}})  
 				} else {
 					// We don't know exactly which side just that it's on the first two digits
 				}
-			} else if lastScoreOutOfPos === 2 {
+			} 
+			
+			if lastScoreOutOfPos == 2 {
 				// Means the first two digits of the answer are the previous guesses digit;
 				// If the currentScoreOutOfPos is 3 then the is something like bbax, bbxa, aabx, aaxb
-			} else if lastScoreOutOfPos === 3 {
+			}
+
+			if lastScoreOutOfPos == 3 {
 				// Means one side of the aabb guess is on the wrong side; check the curretn score
 				// to figure out which one it was (a or b). The other has a single digit on that
 				// side, i.e the answer is one of the following; bbax, bbxa, aabx, aaxb
