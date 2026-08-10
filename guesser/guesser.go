@@ -13,7 +13,7 @@ type PrevGuess struct {
 }
 
 type SuspectedAnswerDigit struct {
-	guess string
+	guess    string
 	position []int
 }
 
@@ -22,7 +22,7 @@ var prevGuesses = []PrevGuess{}
 
 func saveScore(score shared.Score) {
 	if len(prevGuesses) > 0 {
-		prevGuesses[len(prevGuesses) - 1].score = score
+		prevGuesses[len(prevGuesses)-1].score = score
 	}
 }
 
@@ -51,16 +51,16 @@ func checkLastGuessResponse(score shared.Score) {
 	}
 
 	numPrevGuesses := len(prevGuesses)
-	previousGuess := prevGuesses[numPrevGuesses - 1]
+	previousGuess := prevGuesses[numPrevGuesses-1]
 	previousGuessStr := previousGuess.guess
-  lastGuessWasSingleDigit := true
+	lastGuessWasSingleDigit := true
 	for x := range previousGuessStr {
 		if previousGuessStr[x] != previousGuessStr[0] {
 			lastGuessWasSingleDigit = false
 		}
 	}
 
-	lastScore := prevGuesses[numPrevGuesses - 2].score
+	lastScore := prevGuesses[numPrevGuesses-2].score
 	lastScoreOutOfPos := lastScore.CorrectAndOutOfPosition
 	// lastScoreInPos := lastScore.CorrectAndInPosition
 	currScoreOutOfPos := score.CorrectAndOutOfPosition
@@ -74,13 +74,13 @@ func checkLastGuessResponse(score shared.Score) {
 				// Means one of these digits is on the left hand side.
 				// If currScoreOutOfPos is = 2; that means the answer is bbxx
 				if currScoreOutOfPos == 2 {
-					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0}})  
-					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{1}})  
+					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0}})
+					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{1}})
 				} else {
 					// We don't know exactly which side just that it's on the first two digits
 				}
-			} 
-			
+			}
+
 			if lastScoreOutOfPos == 2 {
 				// Means the first two digits of the answer are the previous guesses digit;
 				// If the currentScoreOutOfPos is 3 then the is something like bbax, bbxa, aabx, aaxb
@@ -101,7 +101,7 @@ func getNewGuessPair() string {
 		return "0011"
 	}
 
-	lastGuess := prevGuesses[len(prevGuesses) - 1].guess
+	lastGuess := prevGuesses[len(prevGuesses)-1].guess
 	wasInitialPairGuess := getWasInitialPairGuess()
 	lastGuessLastRune, err := strconv.Atoi(string(lastGuess[3]))
 

@@ -6,5 +6,4 @@ type Score struct {
 	CorrectGuess            bool
 }
 
-var EmptyScore = Score{0,0,false}
-
+var EmptyScore = Score{0, 0, false}
