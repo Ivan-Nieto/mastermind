@@ -62,36 +62,82 @@ func checkLastGuessResponse(score shared.Score) {
 
 	lastScore := prevGuesses[numPrevGuesses-2].score
 	lastScoreOutOfPos := lastScore.CorrectAndOutOfPosition
-	// lastScoreInPos := lastScore.CorrectAndInPosition
+	lastScoreInPos := lastScore.CorrectAndInPosition
 	currScoreOutOfPos := score.CorrectAndOutOfPosition
-	// currScoreInPos := score.CorrectAndInPosition
+	lastCombinedScore := lastScoreOutOfPosition + lastScoreInPos
+	currScoreInPos := score.CorrectAndInPosition
 
-	if currScoreOutOfPos > 0 {
-		// Might not be necessary to check len > 2 given single
-		// digit guesses are never the first guess.
-		if lastGuessWasSingleDigit && numPrevGuesses > 2 {
-			if lastScoreOutOfPos == 1 {
-				// Means one of these digits is on the left hand side.
-				// If currScoreOutOfPos is = 2; that means the answer is bbxx
-				if currScoreOutOfPos == 2 {
-					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0}})
-					suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{1}})
-				} else {
-					// We don't know exactly which side just that it's on the first two digits
-				}
-			}
+	if lastCombinedScore > currScoreInPos {
+		// Is a in the answer once?
+		if lastCombinedScore > 1 && currScoreInPosition <= 3 {
+		}
+		// Is a in the answer twice?
+		if lastCombinedScore > 2 && currScoreInPosition <= 2 {
+		}
+		// Is b in the answer once?
+		if currScoreInPos == 1 {
+		}
+		// Is b in the answer twice?
+		if currScoreInPos == 2 {
+		}
+		// Is b in the answer thrice?
+		if currScoreInPos == 3 {
+		}
+	}
 
-			if lastScoreOutOfPos == 2 {
-				// Means the first two digits of the answer are the previous guesses digit;
-				// If the currentScoreOutOfPos is 3 then the is something like bbax, bbxa, aabx, aaxb
-			}
+	// b is in the answer once or twice
+	if lastCombinedScore == currScoreinPos {
+		// b was on the left if lastScoreOutOfPos times
+		// b was on the right lastScoreInPos times
 
-			if lastScoreOutOfPos == 3 {
-				// Means one side of the aabb guess is on the wrong side; check the curretn score
-				// to figure out which one it was (a or b). The other has a single digit on that
-				// side, i.e the answer is one of the following; bbax, bbxa, aabx, aaxb
+		allOnTheRight := lastScoreInPos == currScoreInPos && lastScoreOutOfPos == 0
+		allOnTheLeft := lastScoreOutOfPos == currScoreInPos && lastScoreInPos == 0
+		if allOnTheRight {
+			suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{2, 3}})
+			suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{2, 3}})
+		}
+		if allOnTheLeft {
+			suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0, 1}})
+			suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0, 1}})
+		}
+		if !allOnTheLeft && !allOnTheRight {
+			if lastScoreOutOfPos {
+				suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0, 1}})
+				suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{2, 3}})
+			} else {
+				suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{2, 3}})
+				suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0, 1}})
 			}
 		}
+		if currScoreInPos == 1 {
+			// TODO: Remove the last item that was added to the suspectedAnswers slice.
+		}
+	}
+
+	// b is on the left at least once
+	if lastCombinedScore < currScoreInPos {
+		if lastCombinedScore == 1 {
+			if lastScoreOutOfPos == 1 {
+				//bbxx
+				// if currScoreInPos == 3 then it's bbxb or bbbx
+			} else {
+				// xxbb
+				// if currScoreInPos == 3 then it's bxbb or xbbb
+			}
+		}
+
+		// TODO: Figure out if that 'x' should be an 'a'.
+		if lastCombinedScore == 2 {
+			// currScoreInPos must be 3
+			// lastScoreInPos == 0 is not possible if currScoreInPos == 3
+			if lastScoreInPos == 1 { // lastScoreOutOfPos == 1
+				// Answer could be or bbxb or bbbx
+			}
+			if lastScoreInPos == 2 { // lastScoreOutOfPos == 0
+				// Answer could be xbbb or bxbb
+			}
+		}
+		// lastCombinedScore == 3 is not possible; currScoreInPos would need to be 4
 	}
 }
 
