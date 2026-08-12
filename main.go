@@ -6,8 +6,8 @@ import "mastermind/checker"
 import "fmt"
 
 func main() {
-	maxGuesses := 5
-	answer := "1010"
+	maxGuesses := 20
+	answer := "1100"
 	guess := guesser.MakeGuess(shared.Score{})
 	currScore := checker.CheckGuess(guess, answer)
 

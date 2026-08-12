@@ -35,7 +35,11 @@ func MakeGuess(prevResponseScore shared.Score) string {
 
 	checkLastGuessResponse(prevResponseScore)
 
-	fmt.Printf("Making guess '%s', numPreviousGuessesu=%d\n", guess, len(prevGuesses))
+	fmt.Printf("Current suspected answer:")
+	for _, value := range suspectedAnswers {
+		fmt.Printf("%r, ", value.guess)
+	}
+	fmt.Printf("\nMaking guess '%s', numPreviousGuessesu=%d\n", guess, len(prevGuesses))
 	prevGuesses = append(prevGuesses, PrevGuess{guess, shared.EmptyScore})
 	return guess
 }
@@ -45,7 +49,7 @@ func checkLastGuessResponse(score shared.Score) {
 		log.Fatal("New guess was requested but the last guess was correct")
 	}
 
-	if len(prevGuesses) < 2 || score.CorrectAndOutOfPosition == 0 && score.CorrectAndInPossition == 0 {
+	if len(prevGuesses) < 2 || score.CorrectAndOutOfPosition == 0 && score.CorrectAndInPosition == 0 {
 		// Nothing to do; the previous answer didn't get any right
 		return
 	}
@@ -60,19 +64,22 @@ func checkLastGuessResponse(score shared.Score) {
 		}
 	}
 
+	if !lastGuessWasSingleDigit {
+		return
+	}
+
 	lastScore := prevGuesses[numPrevGuesses-2].score
 	lastScoreOutOfPos := lastScore.CorrectAndOutOfPosition
 	lastScoreInPos := lastScore.CorrectAndInPosition
-	currScoreOutOfPos := score.CorrectAndOutOfPosition
-	lastCombinedScore := lastScoreOutOfPosition + lastScoreInPos
+	lastCombinedScore := lastScoreOutOfPos + lastScoreInPos
 	currScoreInPos := score.CorrectAndInPosition
 
 	if lastCombinedScore > currScoreInPos {
 		// Is a in the answer once?
-		if lastCombinedScore > 1 && currScoreInPosition <= 3 {
+		if lastCombinedScore > 1 && currScoreInPos <= 3 {
 		}
 		// Is a in the answer twice?
-		if lastCombinedScore > 2 && currScoreInPosition <= 2 {
+		if lastCombinedScore > 2 && currScoreInPos <= 2 {
 		}
 		// Is b in the answer once?
 		if currScoreInPos == 1 {
@@ -86,7 +93,7 @@ func checkLastGuessResponse(score shared.Score) {
 	}
 
 	// b is in the answer once or twice
-	if lastCombinedScore == currScoreinPos {
+	if lastCombinedScore == currScoreInPos {
 		// b was on the left if lastScoreOutOfPos times
 		// b was on the right lastScoreInPos times
 
@@ -101,7 +108,7 @@ func checkLastGuessResponse(score shared.Score) {
 			suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0, 1}})
 		}
 		if !allOnTheLeft && !allOnTheRight {
-			if lastScoreOutOfPos {
+			if lastScoreOutOfPos > 0 {
 				suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{0, 1}})
 				suspectedAnswers = append(suspectedAnswers, SuspectedAnswerDigit{string(previousGuessStr[0]), []int{2, 3}})
 			} else {

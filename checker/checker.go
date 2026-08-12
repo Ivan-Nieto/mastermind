@@ -8,7 +8,7 @@ func CheckGuess(guess string, answer string) shared.Score {
 	if guess == answer {
 		return shared.Score{
 			CorrectAndOutOfPosition: 0,
-			CorrectAndInPossition:   4,
+			CorrectAndInPosition:    4,
 			CorrectGuess:            true,
 		}
 	}
@@ -26,7 +26,7 @@ func CheckGuess(guess string, answer string) shared.Score {
 
 	return shared.Score{
 		CorrectAndOutOfPosition: numOutOfPosition,
-		CorrectAndInPossition:   numInPosition,
+		CorrectAndInPosition:    numInPosition,
 		CorrectGuess:            numInPosition == len(answer) && len(guess) == len(answer),
 	}
 }
@@ -56,13 +56,17 @@ func CountOutOfPosition(guess []rune, answer []rune) int {
 
 	for i := 0; i < len(answer); i += 1 {
 		index, found := sort.Find(len(answerCopy), func(j int) int {
+			fmt.Printf("Checking indexes: '%d' and '%d'\n", j, i)
 			if answerCopy[j] == guess[i] {
+				fmt.Printf("Found match: %s / %s\n", answerCopy[j], guess[i])
 				return j
 			} else {
+				fmt.Printf("Did not match: %s / %s\n", answerCopy[j], guess[i])
 				return -1
 			}
 		})
 
+		fmt.Printf("Index=%d\n", index)
 		if index > 0 || found {
 			numOutOfPosition += 1
 			answerCopy[index] = hideRune
