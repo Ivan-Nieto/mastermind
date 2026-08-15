@@ -26,7 +26,6 @@ func saveScore(score shared.Score) {
 	}
 }
 
-// var prevGuesses = []string{}
 var confirmedPosition = []int{9, 9, 9, 9}
 
 func MakeGuess(prevResponseScore shared.Score) string {
@@ -154,21 +153,27 @@ func getNewGuessPair() string {
 		return "0011"
 	}
 
+	lastScore := prevGuesses[len(prevGuesses)-1].score
 	lastGuess := prevGuesses[len(prevGuesses)-1].guess
 	wasInitialPairGuess := getWasInitialPairGuess()
 	lastGuessLastRune, err := strconv.Atoi(string(lastGuess[3]))
+	lastGuessTotalyWrong := lastScore.CorrectAndOutOfPosition == 0 && lastScore.CorrectAndInPosition == 0
 
 	if err != nil {
 		log.Fatal("Failed to convert last guess rune to int")
 	}
 
-	if wasInitialPairGuess {
+	if wasInitialPairGuess && !lastGuessTotalyWrong {
 		return fmt.Sprintf("%d%d%d%d", lastGuessLastRune, lastGuessLastRune, lastGuessLastRune, lastGuessLastRune)
 	}
 
 	a := lastGuessLastRune + 1
 	b := lastGuessLastRune + 2
 	s := fmt.Sprintf("%d%d%d%d", a, a, b, b)
+
+	if a > 6 || b > 6 {
+		log.Fatal("Was unable to find an answer")
+	}
 
 	return s
 }

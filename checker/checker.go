@@ -2,7 +2,6 @@ package checker
 
 import "fmt"
 import "mastermind/shared"
-import "sort"
 
 func CheckGuess(guess string, answer string) shared.Score {
 	if guess == answer {
@@ -44,32 +43,29 @@ func CountInPosition(guess []rune, answer []rune) int {
 
 func CountOutOfPosition(guess []rune, answer []rune) int {
 	answerCopy := answer // This should be a clone!
+	guessCopy := guess
 	numOutOfPosition := 0
-	hideRune := rune(-1)
+	hideRune := rune(9)
 
 	// Remove all the in position matches.
 	for i := 0; i < len(answer); i += 1 {
-		if answer[i] == guess[i] {
-			answerCopy[i] = hideRune
+		if answer[i] == guessCopy[i] {
+			answerCopy[i] = '9' // hideRune
 		}
 	}
 
-	for i := 0; i < len(answer); i += 1 {
-		index, found := sort.Find(len(answerCopy), func(j int) int {
-			fmt.Printf("Checking indexes: '%d' and '%d'\n", j, i)
-			if answerCopy[j] == guess[i] {
-				fmt.Printf("Found match: %s / %s\n", answerCopy[j], guess[i])
-				return j
-			} else {
-				fmt.Printf("Did not match: %s / %s\n", answerCopy[j], guess[i])
-				return -1
+	for i := 0; i < len(answerCopy); i += 1 {
+		foundIndex := 9
+		for j, val := range guessCopy {
+			if val == answerCopy[i] && val != hideRune {
+				foundIndex = j
+				break
 			}
-		})
+		}
 
-		fmt.Printf("Index=%d\n", index)
-		if index > 0 || found {
+		if foundIndex != 9 {
 			numOutOfPosition += 1
-			answerCopy[index] = hideRune
+			guessCopy[foundIndex] = hideRune
 		}
 	}
 
