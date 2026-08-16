@@ -7,12 +7,12 @@ import "fmt"
 
 func main() {
 	maxGuesses := 10
-	answer := "1100"
+	answer := "0123"
 	guess := guesser.MakeGuess(shared.Score{})
 	currScore := checker.CheckGuess(guess, answer)
 
-	i := 1
-	for i := 1; i < maxGuesses; i += 1 {
+	i := 2
+	for i := 2; i < maxGuesses; i += 1 {
 		if currScore.CorrectGuess {
 			break
 		}
